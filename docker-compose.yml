@@ -1,0 +1,26 @@
+version: '3.6'
+
+services:
+  smart-brain-api:
+    container_name: backend
+    image: node:latest
+    build: ./
+    command: npm start
+    working_dir: /usr/src/smart-brain-api
+    environment:
+      POSTGRES_URI: postgres://docker:docker@postgres:5432/docker-seeded
+    ports:
+      - "4400:4400"
+    volumes:
+      - ./:/usr/src/smart-brain-api
+
+  # Postgres
+  postgres:
+    build: ./postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: docker-seeded
+    ports:
+      - "5434:5432"

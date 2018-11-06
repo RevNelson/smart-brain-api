@@ -14,12 +14,7 @@ const image = require("./controllers/image");
 
 const db = knex({
   client: "pg",
-  connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-  }
+  connection: process.env.POSTGRES_URI
 });
 
 const app = express();
@@ -30,7 +25,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send(db.users);
+  res.send('WORKING');
 });
 
 app.post("/signin", (req, res) => {
