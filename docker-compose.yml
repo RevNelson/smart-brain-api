@@ -10,6 +10,7 @@ services:
     environment:
       POSTGRES_URI: postgres://docker:docker@postgres:5432/docker-seeded
       JWT_SECRET: docker-secret
+      REDIS_HOST: redis://redis:6379
     ports:
       - "4400:4400"
     volumes:
@@ -25,3 +26,9 @@ services:
       POSTGRES_DB: docker-seeded
     ports:
       - "5434:5432"
+
+  # Redis
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
