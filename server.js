@@ -28,9 +28,7 @@ app.get("/", (req, res) => {
   res.send('WORKING');
 });
 
-app.post("/signin", (req, res) => {
-  signin.handleSignIn(req, res, db, bcrypt);
-});
+app.post("/signin", signin.authentication(db, bcrypt));
 
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
@@ -38,6 +36,10 @@ app.post("/register", (req, res) => {
 
 app.get("/profile/:id", (req, res) => {
   profile.handleProfileGet(req, res, db);
+});
+
+app.post("/profile/:id", (req, res) => {
+  profile.handleProfileUpdate(req, res, db);
 });
 
 app.put("/image", (req, res) => {
