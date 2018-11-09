@@ -9,8 +9,10 @@ require("dotenv").config();
 
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
+const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
+const auth = require("./controllers/authorization");
 
 const db = knex({
   client: "pg",
@@ -25,25 +27,30 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send('WORKING');
+  res.send("WORKING");
 });
 
-app.post("/signin", (req, res) => {
-  signin.handleSignIn(req, res, db, bcrypt);
+app.post("/signin", signin.authentication(db, bcrypt));
+app.post("/signout", (req, res) => {
+  signout.revoke(req, res);
 });
 
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
 });
 
-app.get("/profile/:id", (req, res) => {
+app.get("/profile/:id", auth.requireAuth, (req, res) => {
   profile.handleProfileGet(req, res, db);
 });
 
-app.put("/image", (req, res) => {
+app.post("/profile/:id", auth.requireAuth, (req, res) => {
+  profile.handleProfileUpdate(req, res, db);
+});
+
+app.put("/image", auth.requireAuth, (req, res) => {
   image.handleImage(req, res, db);
 });
-app.post("/imageurl", (req, res) => {
+app.post("/imageurl", auth.requireAuth, (req, res) => {
   image.handleAPI(req, res);
 });
 
