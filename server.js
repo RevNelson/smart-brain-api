@@ -9,9 +9,10 @@ require("dotenv").config();
 
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
+const signout = require("./controllers/signout");
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
-const auth = require("./controllers/authorization")
+const auth = require("./controllers/authorization");
 
 const db = knex({
   client: "pg",
@@ -26,10 +27,13 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
-  res.send('WORKING');
+  res.send("WORKING");
 });
 
 app.post("/signin", signin.authentication(db, bcrypt));
+app.post("/signout", (req, res) => {
+  signout.revoke(req, res);
+});
 
 app.post("/register", (req, res) => {
   register.handleRegister(req, res, db, bcrypt);
